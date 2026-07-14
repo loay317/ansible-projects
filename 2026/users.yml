@@ -1,0 +1,84 @@
+---
+- name: create users 
+  hosts: dev
+  become: true
+  vars_files:
+    - /tmp/user_list.yml
+    - locker.yml
+  tasks:
+    - name: download users file
+      copy:
+        src:  /var/www/html/users.yml
+        dest: /tmp/user_list.yml
+
+    - name: create group
+      group: 
+       name: devops
+       state: present
+    - name: create the users
+      ansible.builtin.user: 
+        name: "{{ item.name }}"
+        password: "{{ pw_developer | password_hash('sha512')}}"
+        groups: devops
+        append: true
+      loop: "{{ users }}"
+      when: item.job == 'developer'
+
+- name: create users on prod
+  hosts: prod
+  vars_files:
+    - /tmp/user_list.yml
+    - locker.yml
+  tasks:
+    - name: add group
+      group:
+        name: osmgr
+        state: present
+    - name: create users
+      user: 
+        name: "{{ item.name }}"
+        groups: opsmgr
+        append: true
+        password: "{{ pw_manager }}"
+      loop: "{{ users }}"
+      when: item.job == 'manager'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

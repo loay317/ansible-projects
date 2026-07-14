@@ -1,0 +1,5 @@
+---
+- name: configure web servers
+  hosts: test
+  roles:
+   - mweb

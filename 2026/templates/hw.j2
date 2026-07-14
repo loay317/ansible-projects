@@ -1,0 +1,7 @@
+---
+ {% for x in groups['all'] %}
+INVENTORY_HOSTNAME=: {{ hostvars[x].ansible_hostname }}
+TOTAL_MEMORY_IN_MB=: {{ hostvars[x].ansible_memtotal_mb }}
+BIOS_VERSION=2.1.2 : {{ hostvars[x].ansible_bios_version }}
+CPU_count=: {{ hostvars[x].ansible_processor_vcpus }}
+{% endfor %}

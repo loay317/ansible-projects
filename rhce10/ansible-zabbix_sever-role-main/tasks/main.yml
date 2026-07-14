@@ -1,0 +1,70 @@
+---
+- name: Add zabbix repository (Debian)
+  ansible.builtin.apt:
+    deb: https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.0+debian13_all.deb
+  when: ansible_facts ['os_family'] == "Debian"
+  notify: Update apt cache
+
+- name: Install zabbix server and plugins
+  ansible.builtin.apt:
+    name:
+      - locales
+      - python3-pymysql
+      - mariadb-server
+      - zabbix-server-mysql
+      - zabbix-frontend-php
+      - zabbix-nginx-conf
+      - zabbix-sql-scripts
+      - zabbix-agent2
+      - zabbix-agent2-plugin-mongodb
+      - zabbix-agent2-plugin-mssql
+      - zabbix-agent2-plugin-postgresql
+
+- name: Ensure locales exist
+  community.general.locale_gen:
+    name:
+      - en_US.UTF-8
+      - en_GB.UTF-8
+      - pl_PL.UTF-8
+    state: present
+
+- name: Configure zabbix
+  ansible.builtin.template:
+    src: zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+    mode: '0600'
+    owner: root
+    group: root
+  notify: Restart zabbix server
+
+- name: Configure database
+  ansible.builtin.include_tasks: tasks/mysql.yaml
+
+- name: Enable and start required services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - zabbix-server
+    - zabbix-agent2
+    - nginx
+    - php8.4-fpm
+
+- name: Remove default nginx site
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/nginx/sites-enabled/default
+    - /etc/nginx/sites-available/default
+  notify: Restart nginx
+
+- name: Configure nginx
+  ansible.builtin.template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/conf.d/zabbix.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Restart nginx

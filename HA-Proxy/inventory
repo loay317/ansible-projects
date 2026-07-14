@@ -1,0 +1,5 @@
+[balancer]
+node1.lab.example.com
+[webservers]
+node2.lab.example.com
+node3.lab.example.com

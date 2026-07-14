@@ -1,0 +1,18 @@
+---
+# tasks file for roles/apache
+- name: installa and enable apache web server
+  dnf: 
+    name: 
+     - httpd
+     - mariadb-server
+    state: latest 
+- name: enable http service
+  systemd:
+    name: "{{ item }}"
+    state: started
+  loop:
+    "{{ services }}"
+- name: use template to configure web page
+  template: 
+    src: ./template.j2
+    dest: /var/www/html/index.html

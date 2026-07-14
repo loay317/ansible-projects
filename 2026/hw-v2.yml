@@ -1,0 +1,39 @@
+---
+- name: Generate hardware report
+  hosts: all
+  tasks:
+    - name: Download template only once
+      get_url:
+        url: http://localhost/hwreport.empty
+        dest: /root/hwreport.txt
+      delegate_to: localhost
+      run_once: true
+    - name: Add hostname to the report
+      ansible.builtin.lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^HOST='
+        line: "HOST={{ inventory_hostname }}"
+
+    - name: Add memory size to the report
+      ansible.builtin.lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^MEMORY='
+        line: "MEMORY={{ ansible_memtotal_mb | default('NONE', true) }}"
+
+    - name: Add BIOS version to the report
+      ansible.builtin.lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^BIOS='
+        line: "BIOS={{ ansible_bios_version | default('NONE', true) }}"
+
+    - name: Add vda disk size to the report
+      ansible.builtin.lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^DISK_SIZE_VDA='
+        line: "DISK_SIZE_VDA={{ ansible_devices.vda.size | default('NONE', true) }}"
+
+    - name: Add vdb disk size to the report
+      ansible.builtin.lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^DISK_SIZE_VDB='
+        line: "DISK_SIZE_VDB={{ ansible_devices.vdb.size | default('NONE', true) }}"

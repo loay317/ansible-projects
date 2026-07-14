@@ -1,0 +1,4 @@
+---
+roles:
+ - name: balancer
+   src: haproxy.tar.gz

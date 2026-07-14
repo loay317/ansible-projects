@@ -1,0 +1,8 @@
+---
+- name: generate report for all hosts
+  hosts: all
+  tasks: 
+   - name: run template for jinja
+     template:
+       src: hw.j2
+       dest: /tmp/allhw.txt

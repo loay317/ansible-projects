@@ -1,0 +1,21 @@
+---
+- name: Configure the issue file
+  hosts: all
+  tasks:
+    - name: configure message for Dev
+      copy:
+        content: "Development Group\n"
+        dest: /etc/issue
+      when: "'dev' in group_names"
+        
+    - name: configure message for prod
+      copy:
+        content: "Production Group\n"
+        dest: /etc/issue
+      when: "'prod' in group_names"
+
+    - name: configure message for Test
+      copy:
+        content: "Test Group\n"
+        dest: /etc/issue
+      when: "inventory_hostname in groups['test']"

@@ -1,0 +1,15 @@
+---
+- name: configure issue file 
+  hosts: all
+  gather_facts: false
+  tasks: 
+    - name:  configure issue file on dev
+      copy:
+        content: "Dev environment\n"
+        dest: /etc/issue
+      when: "'dev' in group_names"
+    - name:  configure issue file on prod
+      copy:
+        content: "Pord environment\n"
+        dest: /etc/issue
+      when: "'prod' in group_names"

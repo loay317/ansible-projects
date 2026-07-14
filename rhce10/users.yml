@@ -1,0 +1,40 @@
+---
+- name: create users from file
+  hosts: all
+  vars_files:
+    - vault.yml
+    - user-list.yml
+  tasks:
+   - name: create two group
+     group:
+       name: "{{ item }}"
+       state: present
+     loop: 
+       - opsdev
+       - opsmgr
+
+   - name: create user on test and dev
+     user: 
+       name: "{{ item.name}}"
+       groups: opsdev
+       shell: /bin/bash
+       password: "{{ pw_developer |password_hash ('sha512') }}"
+       update_password: on_create
+       append: true
+     loop:
+       "{{ users }}"
+     when: 
+         - item.job=="developer" 
+         - "'dev' in group_names or 'test' in group_names"
+          
+   - name: create user in prod group
+     user:
+        name: "{{ item.name }}"
+        uid: "{{ item.uid }}"
+        groups: opsmgr
+        password: "{{ pw_manager |password_hash ('sha512')}}"
+     loop: "{{ users }}"
+     when: 
+       - item.job=="manager" 
+       - "'prod' in group_names"
+

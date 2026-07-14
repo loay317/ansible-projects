@@ -1,0 +1,4 @@
+---
+zabbix_db_password: Ch@nge_me
+zabbix_port: "8080"
+zabbix_server_name: "zabbix.example.com"

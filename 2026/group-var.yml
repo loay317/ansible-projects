@@ -1,0 +1,11 @@
+---
+- name: print variable value
+  hosts: all
+  tasks:
+    - debug:
+        var: group_names
+
+    - debug:
+        var: hostvars
+    - debug:
+        msg: "{{ hostvars[inventory_hostname] }}"

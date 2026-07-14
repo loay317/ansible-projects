@@ -1,0 +1,7 @@
+127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{% for server in ansible_play_hosts %}
+{{ hostvars[server].ansible_facts.default_ipv4.address }} {{ hostvars[server].ansible_facts.fqdn }} server 
+{% endfor %}
+

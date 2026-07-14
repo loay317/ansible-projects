@@ -1,0 +1,6 @@
+---
+- name: change mode on prod machines
+  hosts: prod
+  tasks: 
+    - name: change to muti-mode
+      systemd:

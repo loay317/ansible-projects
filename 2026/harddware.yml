@@ -1,0 +1,13 @@
+---
+- name: generate the Hardware Specs
+  hosts: all
+  tasks:
+   - name: check Bios version
+     copy:
+       content: |
+         INVENTORY_HOSTNAME=: {{ ansible_hostname }}
+         TOTAL_MEMORY_IN_MB=: {{ ansible_memtotal_mb }}
+         BIOS_VERSION=2.1.2 : {{ ansible_bios_version }}
+         CPU_count=: {{ ansible_processor_vcpus }}
+       dest: /tmp/hwspec1.txt
+

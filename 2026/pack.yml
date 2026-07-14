@@ -1,0 +1,24 @@
+---
+- name: install packages
+  hosts: all
+  tasks: 
+    - name: install Dev gropup
+      ansible.builtin.dnf:
+        name: '@Development tools'
+        state: latest
+      when: "'test' in group_names"
+
+    - name: install php and mariadb
+      ansible.builtin.dnf:
+        name:
+          - php
+          - mariadb
+        state: latest
+      when: "ansible_distribution == 'RedHat'"
+    - name: install php and mariadb-server
+      ansible.builtin.apt:
+        name:
+          - php
+          - mariadb-server
+        state: latest
+      when: "ansible_distribution == 'Debian'"

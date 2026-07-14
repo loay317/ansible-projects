@@ -1,0 +1,4 @@
+---
+collections:
+ - name: ./community-zabbix-4.2.0.tar.gz
+   type: file

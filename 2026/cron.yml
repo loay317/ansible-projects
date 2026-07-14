@@ -1,0 +1,11 @@
+--- 
+- name: configure cron job
+  hosts: dev
+  tasks:
+    - name: crate cron job for user reem
+      cron: 
+       name: "user job"
+       user: reem
+       minute: "*/1"
+       job: 'logger -f "EX294 in progress"'
+ 

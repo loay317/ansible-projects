@@ -1,0 +1,25 @@
+---
+- name: creat two repos
+  hosts: all
+  tasks:
+    - name: Import a key from a url
+      ansible.builtin.rpm_key:
+         state: present
+         key: http://control/localrepo/RPM-GPG-KEY-redhat-release
+
+    - name: baseos-internal
+      yum_repository:
+        name: epel
+        description: Baseos Description
+        file: BaseOS
+        baseurl: http://control/localrepo/BaseOS
+        gpgcheck: true
+        gpgkey: http://control/localrepo/RPM-GPG-KEY-redhat-release
+    - name: AppStream-internal
+      yum_repository:
+        name: epel
+        description: APPStreamOS Description
+        file: AppStreaOS
+        baseurl: http://control/localrepo/AppStream
+        gpgcheck: true
+        gpgkey: http://control/localrepo/RPM-GPG-KEY-redhat-release

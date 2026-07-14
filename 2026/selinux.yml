@@ -1,0 +1,21 @@
+---
+- name: Configure SELinux using role
+  hosts: all
+  become: true
+  vars:
+    selinux_state: disabled
+    selinux_policy: targeted
+  tasks:
+    - name: configure selinux policy
+      block:
+       - name: Set selinux
+         include_role: 
+           name:  linux-system-roles.selinux
+      rescue:
+       - name: reboot server
+         reboot:
+       - name: re-run-selinux context
+         include_role:
+           name: linux-system-roles.selinux
+           #name: rhel-system-roles.selinux
+

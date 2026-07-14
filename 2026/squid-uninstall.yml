@@ -1,0 +1,7 @@
+- name: uninstall squid
+  hosts: localhost
+  become: true
+  roles:
+    - role: squid
+      vars:
+        squid_state: absent

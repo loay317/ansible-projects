@@ -1,0 +1,14 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Restart zabbix server
+  ansible.builtin.service:
+    name: zabbix-server
+    state: restarted
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted

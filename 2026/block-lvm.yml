@@ -1,0 +1,75 @@
+---
+- name: configure lvm and vg
+  hosts: dev
+  vars:
+    mydir:  /dev/research/asmlv
+  tasks:
+    - block:
+       - name: check if research vg exist 
+         command: vgs research
+         register: vgout
+         changed_when: false
+         failed_when: false
+       
+       - name: display output
+         debug:
+           var: vgout
+
+       - name: make sure vg research exist on /dev/sdb2
+         community.general.lvg:
+           vg: research
+           pvs: /dev/sdb2
+         when: vgout.rc != 0 
+
+       - name: create VG Research
+         community.general.lvol:
+          vg: research
+          lv: asmlv
+          size: 3g
+       - name: format with ext4
+
+         community.general.filesystem:
+           fstype: ext4
+           dev: /dev/research/asmlv
+
+       - name: mount to /data1
+         mount: 
+           path: /data1
+           src: "{{mydir}}"
+           fstype: ext4
+           opts: ro,noauto
+           state: mounted
+
+      rescue:
+       - name: check existnace of vg research and create it if not exist
+         command: vgs research
+         register: vgout
+         failed_when: false
+         changed_when: false
+
+       - name: print result of vgs
+         debug:
+           var: vgout.rc
+       #msg: "{{vgout.stdout}}"
+
+       - name: make sure vg research exist on /dev/sdb2
+         community.general.lvg:
+           vg: research
+           pvs: /dev/sdb2
+       - name: create smaller  lvm
+         community.general.lvol:
+           vg: research
+           lv: asmlv
+           size: 1g
+       - name: format with ext4
+         community.general.filesystem:
+           fstype: ext4
+           dev: /dev/research/asmlv
+       - name: mount to /data2
+         mount: 
+           path: /data2
+           src: "{{mydir}}"
+           fstype: ext4
+           opts: ro,noauto
+           state: mounted
+

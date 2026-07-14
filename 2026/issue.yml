@@ -1,0 +1,8 @@
+---
+- name: create issue message file
+  hosts: all
+  tasks:
+   - name: configure issue for Dev
+     ansible.builtin.template:
+       src: issue.j2
+       dest: /etc/issue

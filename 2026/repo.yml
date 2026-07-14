@@ -1,0 +1,18 @@
+---
+- name: create repos
+  hosts: dev
+  tasks:
+   - name: configure base repo
+     yum_repository: 
+       name: base-repo-26
+       description: Base YUM repo 26
+       file: local_repos-26
+       baseurl: http://control/localrepo/BaseOS
+       gpgcheck: no
+   - name: configure Appstream repo
+     yum_repository: 
+       name: Appstream-repo-26
+       description: Appstream YUM repo 26
+       file: Appstream_repos-26
+       baseurl: http://control/localrepo/AppStream
+       gpgcheck: no

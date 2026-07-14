@@ -1,0 +1,23 @@
+---
+- name:
+  hosts: dev
+  vars:
+    path: "/var/www/html/webdev2"
+  tasks:
+   - name: configure web 
+     file:
+       path: /webdev2
+       state: directory
+       mode: '2775'
+
+   - name: Create a symbolic link
+     ansible.builtin.file:
+       src: /webdev2
+       dest: /var/www/html/webdev2
+       state: link
+
+   - name: create webcontrect
+     copy:
+       content: "{{my_env}}\n"
+       dest: "{{path}}/index.html"
+       setype: httpd_sys_content_t

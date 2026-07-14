@@ -1,0 +1,5 @@
+---
+- name: set web contenty using role
+  hosts: prod
+  roles:
+   - apache

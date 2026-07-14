@@ -1,0 +1,39 @@
+---
+- name: configure report for harwadre of all servers
+  hosts: all
+  tasks: 
+   - name: download report
+     get_url: 
+       url: http://control/report.txt
+       dest: /root/hw-report.txt
+   - name: generate the hw report hostname
+     lineinfile: 
+      path: /root/hw-report.txt
+      regexp: '^HOST='
+      line: "HOST= {{ansible_fqdn}}"
+   - name: get meory of server
+     lineinfile:
+       path: /root/hw-report.txt
+       regexp: '^MEMORY='
+       line: "MEMORY={{ansible_memtotal_mb}}"
+
+   - name: get bios version
+     lineinfile:
+       path: /root/hw-report.txt
+       regexp: '^BIOS='
+       line: "Bios_version={{ansible_bios_version}}"
+   - name: get disk size of sda
+     lineinfile:
+       path: /root/hw-report.txt
+       regexp: '^SDA='
+       line: "SDA_Size={{ansible_devices.sda.size}}"
+   - name: get disk size of sdb
+     lineinfile:
+       path: /root/hw-report.txt
+       regexp: '^SDB='
+       line: "SDA_Size={{ansible_devices.sdb.size |default ('None') }}"
+   - name: get disk size of sdc
+     lineinfile:
+       path: /root/hw-report.txt
+       regexp: '^SDC='
+       line: "SDC_Size={{ansible_devices.sdc.size|default ('None') }}"

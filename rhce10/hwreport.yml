@@ -1,0 +1,26 @@
+---
+- name: generate harware report
+  hosts: all
+  tasks:
+   - name: get report from web
+     get_url:
+       url: http://control/hwreport.empty 
+       dest: /tmp/hwreport.txt
+       mode: '0644'
+   - name: write Memory data to report
+     lineinfile:
+       path: /tmp/hwreport.txt
+       regexp: '^MEMORY='
+       line: MEMORY= "{{ ansible_memtotal_mb }}"
+ 
+   - name: write disk sda
+     lineinfile:
+       path: /tmp/hwreport.txt
+       regexp: '^DISK_SIZE_SDA='
+       line: SDA_DISK_SIZE= "{{ ansible_devices.sda.size }}"
+
+   - name: write disk sdB
+     lineinfile:
+       path: /tmp/hwreport.txt
+       regexp: '^DISK_SIZE_SDB='
+       line: SDB_DISK_SIZE= "{{ ansible_devices.sdb.size | default ('N/A') }}"

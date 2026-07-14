@@ -1,0 +1,41 @@
+---
+- name: create directory and apply selinux
+  hosts: web
+  tasks:
+   
+   - name: make sure group is exist
+     group:
+       name: webdev
+       state: present
+
+   - name: create user if not exist
+     user:
+      name: webdev
+      shell: /bin/bash
+      groups: webdev
+      append: true
+   - name: create web directory 
+     file:
+       path : /webdev
+       state: directory
+       mode: "2755"
+       owner: webdev
+   - name: create symlink
+     file:
+        src: /webdev
+        dest: /var/www/html/webdev
+        owner: webdev
+        group: root
+        state: link
+   - name: set selinux
+     sefcontext:
+       target: '/webdev(/.*)?'
+       setype:  httpd_sys_content_t
+       state: present
+   - name: Apply new SELinux file context to filesystem
+     ansible.builtin.command: restorecon -Rv /webdev
+ 
+   - name: copy content
+     copy:
+       content: "This is Dev Env as test"
+       dest: /webdev/index.html 

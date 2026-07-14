@@ -1,0 +1,40 @@
+---
+- name: configure loadbalancer
+  hosts: balancer
+  vars:
+    haproxy_backend_servers:
+     - name: app1
+       address: 192.168.10.53:80
+     - name: app2
+       address: 192.168.10.58:80
+
+  roles: 
+    - geerlingguy.haproxy
+
+  tasks:
+    - name: allow web from firewalld
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+- name: configure webservers
+  hosts: webservers
+  roles: 
+    - geerlingguy.php
+    - geerlingguy.apache
+  tasks:
+    - name: allow web from firewalld
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+    - name: configure web servers
+      ansible.builtin.copy:
+        dest: /var/www/html/hello.php
+        content: | 
+          <?php 
+          echo "Hellow from Loay to MArwan" . gethostname().
+          phpinfo():
+          ?>

@@ -1,0 +1,4 @@
+---
+roles:
+ - name: squid
+   src: https://galaxy.ansible.com/download/mafalb-squid-0.2.0.tar.gz

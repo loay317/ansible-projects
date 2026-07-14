@@ -1,0 +1,8 @@
+---
+roles:
+- name: zabbix 
+  src: https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz
+- name: Security
+  src: https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz
+- name: Squid
+  src: https://galaxy.ansible.com/download/mafalb-squid-0.2.0.tar.gz

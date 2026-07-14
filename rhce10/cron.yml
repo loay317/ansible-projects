@@ -1,0 +1,11 @@
+---
+- name: configure cron jobs
+  hosts: all
+  tasks: 
+    - name: create cron job
+      cron:
+        name: "generate message"
+        user: loay
+        minute: "*/2"
+        job: logger "EX294 in Progress"
+

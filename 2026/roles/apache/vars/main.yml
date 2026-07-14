@@ -1,0 +1,10 @@
+---
+# vars file for apache
+web_packages: 
+  - httpd
+  - firewalld
+
+web_services: 
+  - httpd
+web_roles:
+  - https

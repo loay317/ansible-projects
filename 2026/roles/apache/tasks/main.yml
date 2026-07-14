@@ -1,0 +1,31 @@
+---
+# tasks file for apache
+- name: make sure httpd installed
+  dnf:
+   name: "{{ item }}"
+   state: latest
+  loop: "{{ web_packages }}"
+   
+
+- name: make sure services are up and enabled to start at boot
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop: "{{ web_services }}"
+
+- name: make sure firewall is allowing http traffic
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: true
+    immediate: true
+    offline: true
+  loop: "{{web_roles}}"
+
+
+- name: generate template cpontent 
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: 0644

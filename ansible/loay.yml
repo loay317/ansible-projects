@@ -1,0 +1,8 @@
+---
+- name: get users exist
+  hosts: dev
+  become: true
+  tasks:
+    - name: clist users
+      ansible.builtin.command:
+         cat /etc/passwd |cut -d: -f1 > /tmp/users.tx

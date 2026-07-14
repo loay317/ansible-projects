@@ -1,0 +1,10 @@
+---
+- name: configure report for harwadre of all servers
+  hosts: all
+  tasks: 
+    - name: download template once
+      get_url:
+        url: http://control/report.txt
+        dest: /tmp/report.txt
+      delegate_to: localhost
+      run_once: true

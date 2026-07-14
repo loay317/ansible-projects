@@ -1,0 +1,27 @@
+---
+- name: create list of users
+  hosts: all
+  vars_files:
+    - user-list.yml
+    - vault.yml
+  tasks:
+    - name: create users based on job description
+      loop: "{{users}}"
+      user: 
+        name: "{{ item.name }}"
+        uid: "{{item.uid}}"
+        groups: "devops"
+        password: "{{ dev_pass | password_hash ('sha512') }}"
+      when:
+         - item.job == "developer"
+         - "'dev' in group_names"
+    - name: create users based on job description
+      loop: "{{users}}"
+      user: 
+        name: "{{ item.name }}"
+        uid: "{{item.uid}}"
+        groups: "opsmgr"
+        password: "{{ mgr_pass | password_hash ('sha512') }}"
+      when:
+         - item.job == "manager"
+         - "'prod' in group_names"

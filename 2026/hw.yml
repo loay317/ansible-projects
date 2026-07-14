@@ -1,0 +1,19 @@
+---
+- name: configure report for harwadre of all servers
+  hosts: all
+  tasks: 
+   - name: download report
+     get_url: 
+       url: http://control/report.txt
+       dest: /root/hw-report.txt
+     #delegate_to: localhost
+   - name: generate report
+     copy:
+      content: |
+         ===== Hardware Report =====
+         Memory_total:  {{ ansible_memtotal_mb }} MB
+         Bios Version:  {{ ansible_bios_version }}
+         Hostname:      {{ inventory_hostname }}
+         Size of SDA disk: {{ ansible_devices.sda.size | default ('N/A')}}
+         Size of SDC disk: {{ ansible_devices.sdc.size | default ('N/A')}}
+      dest: /root/hw-report.txt
