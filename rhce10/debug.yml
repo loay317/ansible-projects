@@ -3,3 +3,5 @@
   hosts: all
   tasks:
    - name: print variale messages
+     debug:
+       msg:
