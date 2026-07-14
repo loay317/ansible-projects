@@ -1,0 +1,12 @@
+---
+- name: configure lvm
+  hosts: all
+  tasks: 
+    - name: make sure volume group research is exist and print
+      command:  vgs reserach 
+      register: vg_out
+
+    - name: print result of vgs
+      debug:
+        msg: vg_out.stdout
+

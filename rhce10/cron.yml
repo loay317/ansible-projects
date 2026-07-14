@@ -7,5 +7,5 @@
         name: "generate message"
         user: loay
         minute: "*/2"
-        job: logger "EX294 in Progress"
+        job: logger "EX294 in Progress pls make sure git configured"
 
