@@ -1,0 +1,5 @@
+---
+- name: print messages
+  hosts: all
+  tasks:
+   - name: print variale messages
